@@ -17,6 +17,11 @@ function getDownloadIcon(): string {
   return '📊 CSV';
 }
 
+// Helper function to get JSON download icon
+function getJsonDownloadIcon(): string {
+  return '📋 JSON';
+}
+
 // Query Input Functionality
 function initializeQueryInput() {
   const queryInput = document.getElementById('query-input') as HTMLTextAreaElement;
@@ -225,18 +230,18 @@ function displayResults(response: QueryResponse, query: string) {
   // Add export button if results exist
   if (!response.error && response.results.length > 0) {
     const resultsHeader = document.querySelector('.results-header') as HTMLElement;
-    
+
     // Remove existing button container if any
     const existingButtonContainer = resultsHeader.querySelector('.results-header-buttons');
     if (existingButtonContainer) {
       existingButtonContainer.remove();
     }
-    
+
     // Create button container
     const buttonContainer = document.createElement('div');
     buttonContainer.className = 'results-header-buttons';
-    
-    // Create export button
+
+    // Create CSV export button
     const exportButton = document.createElement('button');
     exportButton.className = 'export-button secondary-button';
     exportButton.innerHTML = `${getDownloadIcon()} Export`;
@@ -248,14 +253,28 @@ function displayResults(response: QueryResponse, query: string) {
         displayError('Failed to export results');
       }
     };
-    
+
+    // Create JSON export button
+    const exportJsonButton = document.createElement('button');
+    exportJsonButton.className = 'export-button secondary-button';
+    exportJsonButton.innerHTML = `${getJsonDownloadIcon()} Export`;
+    exportJsonButton.title = 'Export results as JSON';
+    exportJsonButton.onclick = async () => {
+      try {
+        await api.exportQueryResultsJson(response.results, response.columns);
+      } catch (error) {
+        displayError('Failed to export results as JSON');
+      }
+    };
+
     // Remove toggle button from its current position
     toggleButton.remove();
-    
+
     // Add buttons to container
     buttonContainer.appendChild(exportButton);
+    buttonContainer.appendChild(exportJsonButton);
     buttonContainer.appendChild(toggleButton);
-    
+
     // Add container to results header
     resultsHeader.appendChild(buttonContainer);
   }
@@ -333,8 +352,8 @@ function displayTables(tables: TableSchema[]) {
     buttonsContainer.style.display = 'flex';
     buttonsContainer.style.gap = '0.5rem';
     buttonsContainer.style.alignItems = 'center';
-    
-    // Create export button
+
+    // Create CSV export button
     const exportButton = document.createElement('button');
     exportButton.className = 'export-button table-export-button';
     exportButton.innerHTML = getDownloadIcon();
@@ -346,14 +365,28 @@ function displayTables(tables: TableSchema[]) {
         displayError('Failed to export table');
       }
     };
-    
+
+    // Create JSON export button
+    const exportJsonButton = document.createElement('button');
+    exportJsonButton.className = 'export-button table-export-button';
+    exportJsonButton.innerHTML = getJsonDownloadIcon();
+    exportJsonButton.title = 'Export table as JSON';
+    exportJsonButton.onclick = async () => {
+      try {
+        await api.exportTableJson(table.name);
+      } catch (error) {
+        displayError('Failed to export table as JSON');
+      }
+    };
+
     const removeButton = document.createElement('button');
     removeButton.className = 'remove-table-button';
     removeButton.innerHTML = '&times;';
     removeButton.title = 'Remove table';
     removeButton.onclick = () => removeTable(table.name);
-    
+
     buttonsContainer.appendChild(exportButton);
+    buttonsContainer.appendChild(exportJsonButton);
     buttonsContainer.appendChild(removeButton);
     
     tableHeader.appendChild(tableLeft);
