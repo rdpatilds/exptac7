@@ -6,7 +6,7 @@
         "@playwright/mcp@latest",
         "--isolated",
         "--config",
-        "./playwright-mcp-config.json"
+        "/mnt/d/Experiments/agenticeng/tac-7/trees/f0e268bc/playwright-mcp-config.json"
       ]
     }
   }

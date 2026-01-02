@@ -6,7 +6,7 @@
     },
     "contextOptions": {
       "recordVideo": {
-        "dir": "./videos",
+        "dir": "/mnt/d/Experiments/agenticeng/tac-7/trees/f0e268bc/videos",
         "size": {
           "width": 1920,
           "height": 1080
