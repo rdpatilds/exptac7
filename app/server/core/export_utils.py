@@ -2,7 +2,6 @@ import sqlite3
 from typing import List, Dict
 import pandas as pd
 import io
-import json
 
 
 def generate_csv_from_data(data: List[Dict], columns: List[str]) -> bytes:
