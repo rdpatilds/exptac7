@@ -61,3 +61,11 @@ This prompt helps you determine what documentation you should read based on the 
     - When working with upload button text or labeling
     - When implementing UI text changes for data upload functionality
     - When troubleshooting upload button display or terminology
+
+- app_docs/feature-c737436e-json-export.md
+  - Conditions:
+    - When working with JSON export functionality
+    - When implementing or modifying data export features in JSON format
+    - When troubleshooting JSON download buttons or export endpoints
+    - When working with generate_json_from_data or generate_json_from_table functions
+    - When implementing new export formats (use as architectural reference)
