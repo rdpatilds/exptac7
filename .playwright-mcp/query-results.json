@@ -1,0 +1,42 @@
+[
+  {
+    "id":2,
+    "name":"Jane Smith",
+    "email":"jane@example.com",
+    "signup_date":"2025-10-20",
+    "age":32,
+    "city":"Los Angeles"
+  },
+  {
+    "id":3,
+    "name":"Bob Johnson",
+    "email":"bob@example.com",
+    "signup_date":"2025-11-01",
+    "age":45,
+    "city":"Chicago"
+  },
+  {
+    "id":5,
+    "name":"Charlie Wilson",
+    "email":"charlie@example.com",
+    "signup_date":"2025-11-15",
+    "age":35,
+    "city":"Phoenix"
+  },
+  {
+    "id":7,
+    "name":"Ethan Davis",
+    "email":"ethan@example.com",
+    "signup_date":"2025-11-25",
+    "age":38,
+    "city":"San Antonio"
+  },
+  {
+    "id":8,
+    "name":"Fiona Garcia",
+    "email":"fiona@example.com",
+    "signup_date":"2025-12-01",
+    "age":41,
+    "city":"San Diego"
+  }
+]
