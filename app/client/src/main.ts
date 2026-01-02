@@ -467,16 +467,10 @@ async function removeTable(tableName: string) {
   if (!confirm(`Are you sure you want to remove the table "${tableName}"?`)) {
     return;
   }
-  
+
   try {
-    const response = await fetch(`/api/table/${tableName}`, {
-      method: 'DELETE'
-    });
-    
-    if (!response.ok) {
-      throw new Error('Failed to remove table');
-    }
-    
+    await api.deleteTable(tableName);
+
     // Reload schema
     await loadDatabaseSchema();
     

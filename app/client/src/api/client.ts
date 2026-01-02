@@ -122,11 +122,11 @@ export const api = {
       },
       body: JSON.stringify({ data, columns })
     });
-    
+
     if (!response.ok) {
       throw new Error(`Export failed: ${response.status}`);
     }
-    
+
     // Download the file
     const blob = await response.blob();
     const url = window.URL.createObjectURL(blob);
@@ -137,5 +137,16 @@ export const api = {
     a.click();
     document.body.removeChild(a);
     window.URL.revokeObjectURL(url);
+  },
+
+  // Delete table
+  async deleteTable(tableName: string): Promise<void> {
+    const response = await fetch(`${API_BASE_URL}/table/${tableName}`, {
+      method: 'DELETE'
+    });
+
+    if (!response.ok) {
+      throw new Error(`Delete failed: ${response.status}`);
+    }
   }
 };
