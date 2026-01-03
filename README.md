@@ -7,6 +7,7 @@ A web application that converts natural language queries to SQL using AI, built 
 - 🗣️ Natural language to SQL conversion using OpenAI or Anthropic
 - 📁 Drag-and-drop file upload (.csv and .json)
 - 📊 Interactive table results display
+- 📥 One-click CSV export for tables and query results
 - 🔒 SQL injection protection
 - ⚡ Fast development with Vite and uv
 
@@ -88,7 +89,11 @@ bun run dev
 2. **Query Your Data**: Type a natural language query like "Show me all users who signed up last week"
    - Press `Cmd+Enter` (Mac) or `Ctrl+Enter` (Windows/Linux) to run the query
 3. **View Results**: See the generated SQL and results in a table format
-4. **Manage Tables**: Click the × button on any table to remove it
+4. **Export Data**:
+   - Click the CSV icon on any table in "Available Tables" to export the complete table data
+   - Click "Export" button on query results to download the current results as CSV
+   - Exported files are named: `{table_name}_export.csv` for tables, `query_results.csv` for queries
+5. **Manage Tables**: Click the × button on any table to remove it
 
 ## Development
 
@@ -132,7 +137,11 @@ bun run preview            # Preview production build
 - `POST /api/query` - Process natural language query
 - `GET /api/schema` - Get database schema
 - `POST /api/insights` - Generate column insights
+- `POST /api/export/table` - Export a table as CSV (requires `table_name` in request body)
+- `POST /api/export/query` - Export query results as CSV (requires `data` and `columns` in request body)
+- `DELETE /api/table/{table_name}` - Delete a table from the database
 - `GET /api/health` - Health check
+- `GET /api/generate-random-query` - Generate a random natural language query based on database schema
 
 ## Security
 

@@ -139,6 +139,15 @@ export const api = {
     window.URL.revokeObjectURL(url);
   },
 
+  // Delete table
+  async deleteTable(tableName: string): Promise<void> {
+    const response = await fetch(`${API_BASE_URL}/table/${tableName}`, {
+      method: 'DELETE'
+    });
+
+    if (!response.ok) {
+      throw new Error(`Delete failed: ${response.status}`);
+    }
   // Export table as JSON
   async exportTableJson(tableName: string): Promise<void> {
     const response = await fetch(`${API_BASE_URL}/export/table-json`, {

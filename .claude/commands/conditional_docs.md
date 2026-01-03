@@ -37,6 +37,14 @@ This prompt helps you determine what documentation you should read based on the 
     - When troubleshooting download button functionality
     - When working with pandas-based data export utilities
 
+- app_docs/feature-f0e268bc-one-click-table-exports.md
+  - Conditions:
+    - When working with CSV export functionality
+    - When implementing table or query result export features
+    - When troubleshooting export button UI placement
+    - When working with export_utils.py module
+    - When implementing blob URL downloads for file exports
+
 - app_docs/feature-4c768184-model-upgrades.md
   - Conditions:
     - When working with LLM model configurations
