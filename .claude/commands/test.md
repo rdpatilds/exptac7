@@ -101,7 +101,7 @@ TEST_COMMAND_TIMEOUT: 5 minutes
   {
     "test_name": "frontend_build",
     "passed": false,
-    "execution_command": "cd app/client && bun run build",
+    "execution_command": "cd app/client && npm run build",
     "test_purpose": "Validates TypeScript compilation, module resolution, and production build process for the frontend application",
     "error": "TS2345: Argument of type 'string' is not assignable to parameter of type 'number'"
   },

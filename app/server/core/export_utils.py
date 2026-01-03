@@ -69,7 +69,7 @@ def generate_csv_from_table(conn: sqlite3.Connection, table_name: str) -> bytes:
 
     Args:
         conn: SQLite database connection
-        table_name: Name of the table to export (must be already validated)
+        table_name: Name of the table to export
 
     Returns:
         bytes: CSV file content as bytes
@@ -77,34 +77,81 @@ def generate_csv_from_table(conn: sqlite3.Connection, table_name: str) -> bytes:
     Raises:
         ValueError: If table doesn't exist or export fails
     """
-    try:
-        # Verify table exists
-        cursor = conn.cursor()
-        cursor.execute("""
-            SELECT name FROM sqlite_master
-            WHERE type='table' AND name=?
-        """, (table_name,))
+    cursor = conn.cursor()
 
-        if not cursor.fetchone():
-            raise ValueError(f"Table '{table_name}' does not exist")
+    cursor.execute("""
+        SELECT name FROM sqlite_master
+        WHERE type='table' AND name=?
+    """, (table_name,))
 
-        # Use pandas to read the entire table
-        # Note: Using double quotes to handle table names with special characters
-        query = f'SELECT * FROM "{table_name}"'
-        df = pd.read_sql_query(query, conn)
+    if not cursor.fetchone():
+        raise ValueError(f"Table '{table_name}' does not exist")
 
-        # Convert DataFrame to CSV string
-        csv_buffer = io.StringIO()
-        df.to_csv(csv_buffer, index=False, encoding='utf-8')
-        csv_content = csv_buffer.getvalue()
-        csv_buffer.close()
+    query = f'SELECT * FROM "{table_name}"'
+    df = pd.read_sql_query(query, conn)
 
-        # Convert to bytes with UTF-8 encoding
-        csv_bytes = csv_content.encode('utf-8')
+    csv_buffer = io.StringIO()
+    df.to_csv(csv_buffer, index=False)
+    csv_content = csv_buffer.getvalue()
+    csv_buffer.close()
 
-        logger.info(f"Generated CSV from table '{table_name}': {len(df)} rows, {len(df.columns)} columns")
-        return csv_bytes
+    return csv_content.encode('utf-8')
 
-    except Exception as e:
-        logger.error(f"Error generating CSV from table '{table_name}': {str(e)}")
-        raise ValueError(f"Failed to export table '{table_name}': {str(e)}")
+
+def generate_json_from_data(data: List[Dict], columns: List[str]) -> bytes:
+    """
+    Generate JSON file from data and columns.
+
+    Args:
+        data: List of dictionaries containing the data
+        columns: List of column names
+
+    Returns:
+        bytes: JSON file content as bytes
+    """
+    if not data and not columns:
+        return b"[]"
+
+    if not columns and data:
+        columns = list(data[0].keys()) if data else []
+
+    # Create DataFrame to ensure consistent column ordering and handle types
+    df = pd.DataFrame(data, columns=columns)
+
+    # Use pandas to_json which properly handles NaN as null
+    json_str = df.to_json(orient='records', indent=2, force_ascii=False)
+
+    return json_str.encode('utf-8')
+
+
+def generate_json_from_table(conn: sqlite3.Connection, table_name: str) -> bytes:
+    """
+    Generate JSON file from a database table.
+
+    Args:
+        conn: SQLite database connection
+        table_name: Name of the table to export
+
+    Returns:
+        bytes: JSON file content as bytes
+
+    Raises:
+        ValueError: If table doesn't exist
+    """
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT name FROM sqlite_master
+        WHERE type='table' AND name=?
+    """, (table_name,))
+
+    if not cursor.fetchone():
+        raise ValueError(f"Table '{table_name}' does not exist")
+
+    query = f'SELECT * FROM "{table_name}"'
+    df = pd.read_sql_query(query, conn)
+
+    # Use pandas to_json which properly handles NaN as null
+    json_str = df.to_json(orient='records', indent=2, force_ascii=False)
+
+    return json_str.encode('utf-8')

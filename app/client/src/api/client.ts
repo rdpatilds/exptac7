@@ -148,5 +148,60 @@ export const api = {
     if (!response.ok) {
       throw new Error(`Delete failed: ${response.status}`);
     }
+  // Export table as JSON
+  async exportTableJson(tableName: string): Promise<void> {
+    const response = await fetch(`${API_BASE_URL}/export/table-json`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ table_name: tableName })
+    });
+
+    if (!response.ok) {
+      throw new Error(`JSON export failed: ${response.status}`);
+    }
+
+    // Get the filename from Content-Disposition header
+    const contentDisposition = response.headers.get('Content-Disposition');
+    const filenameMatch = contentDisposition?.match(/filename="(.+)"/);
+    const filename = filenameMatch ? filenameMatch[1] : `${tableName}_export.json`;
+
+    // Download the file
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+  },
+
+  // Export query results as JSON
+  async exportQueryResultsJson(data: any[], columns: string[]): Promise<void> {
+    const response = await fetch(`${API_BASE_URL}/export/query-json`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ data, columns })
+    });
+
+    if (!response.ok) {
+      throw new Error(`JSON export failed: ${response.status}`);
+    }
+
+    // Download the file
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'query_results.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
   }
 };
